@@ -1,0 +1,23 @@
+{
+  "name": "trabajofinal",
+  "version": "1.0.0",
+  "description": "trabajo final de marcas",
+  "homepage": "https://github.com/JuanAlbertoBL/JuanAlbertoBernalLeiva_TrabajoFinalMarcas#readme",
+  "bugs": {
+    "url": "https://github.com/JuanAlbertoBL/JuanAlbertoBernalLeiva_TrabajoFinalMarcas/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuanAlbertoBL/JuanAlbertoBernalLeiva_TrabajoFinalMarcas.git"
+  },
+  "license": "ISC",
+  "author": "Juan Alberto Bernal",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
