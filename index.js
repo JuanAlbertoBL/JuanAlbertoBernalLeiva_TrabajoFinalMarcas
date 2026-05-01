@@ -33,3 +33,75 @@ let notas = [
     {"id":9, "trabajo_id":9, "nota":10, "profesor":"Javi"},
     {"id":10, "trabajo_id":10, "nota":10, "profesor":"Javi"}
 ]
+
+//Endpoints
+
+//obtener todos los trabajos
+app.get("/trabajos", (req,res) => {
+    return res.json(trabajos)
+})
+
+//Seleccionar por id con route params con menejo de error 404:
+app.get("/trabajos/:id", (req, res) => {
+    const trabajo = trabajos.find(a => a.id == req.params.id);
+    if (trabajo){
+    return res.json(trabajo);
+    }
+    return res.status(404).json({ error: "404, no encontrado" });
+});
+
+//selccionar por nombre con query params:
+app.get("/trabajo", (req, res) => {
+    const trabajo = trabajos.find(a => a.nombre == req.query.nombre);
+    if(trabajo){
+    return res.json(trabajo);
+    }
+    return res.status(404).json({ error: "404, no encontrado"})
+});
+
+//añadir un trabajo y mensaje HTTP 201 (created) o 400(bad request):
+app.post("/trabajos", (req,res) =>{
+    if(!req.body.nombre || !req.body.descripcion || !req.body.fecha || !req.body.curso || !req.body.trimestre || !req.body.enlace || !req.body.asignatura){
+        return res.status(400).json({ error: "400, bad request"}) 
+    }
+    let nuevoTrabajo = {
+        id: trabajos.length+1,
+        nombre: req.body.nombre,
+        descripcion: req.body.descripcion,
+        fecha: req.body.fecha,
+        curso: req.body.curso,
+        trimestre: req.body.trimestre,
+        enlace: req.body.enlace,
+        asignatura: req.body.asignatura
+    }
+    trabajos.push(nuevoTrabajo);
+    return res.status(201).json(nuevoTrabajo)
+})
+
+//modificar un registro existente con mensaje HTTP 200:
+app.put("/trabajos/:id", (req,res) => {
+    const trabajo = trabajos.find(a => a.id == req.params.id);
+    if(!trabajo){
+        return res.status(404).json({error: "no se encuentra"})
+    }
+    trabajos[req.params.id-1].nombre = req.body.nombre;
+    trabajos[req.params.id-1].descripcion = req.body.descripcion;
+    trabajos[req.params.id-1].fecha = req.body.fecha;
+    trabajos[req.params.id-1].curso = req.body.curso;
+    trabajos[req.params.id-1].trimestre = req.body.trimestre;
+    trabajos[req.params.id-1].enlace = req.body.enlace;
+    trabajos[req.params.id-1].asignatura = req.body.asignatura;
+
+    return res.status(200).json(trabajos[req.params.id-1])
+})
+
+//eliminar un registro:
+app.delete("/trabajos/:id", (req,res) => {
+    const index = trabajos.findIndex(a => a.id == req.params.id)
+    const trabajo = trabajos.find(a => a.id == req.params.id);
+    if(trabajo){
+    trabajos.splice(index, 1)
+    return res.send("trabajo con id " + req.params.id + " eliminado")
+    }
+    return res.status(404).json({error: "no encontrado"})
+})
