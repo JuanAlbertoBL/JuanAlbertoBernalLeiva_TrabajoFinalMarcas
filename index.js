@@ -34,7 +34,7 @@ let notas = [
     {"id":10, "trabajo_id":10, "nota":10, "profesor":"Javi"}
 ]
 
-//Endpoints
+//Endpoints para el recurso principal (trabajos):
 
 //obtener todos los trabajos
 app.get("/trabajos", (req,res) => {
@@ -102,6 +102,48 @@ app.delete("/trabajos/:id", (req,res) => {
     if(trabajo){
     trabajos.splice(index, 1)
     return res.send("trabajo con id " + req.params.id + " eliminado")
+    }
+    return res.status(404).json({error: "no encontrado"})
+})
+
+//Endpoints para el recurso secundario (notas):
+
+//Obtener todos los registros:
+app.get("/notas", (req,res) => {
+    return res.json(notas)
+})
+
+//obtener registros secundarios que pertenecen a un registro principal concreto (mostrar notas y profesor al seleccionar un trabajo):
+app.get("/trabajos/:id/notas", (req, res) => {
+    const nota = notas.filter(a => a.trabajo_id == Number(req.params.id));
+    if(nota.length > 0){
+    return res.json(nota);
+    }
+    return res.status(404).json({ error: "404, no encontrado"})
+});
+
+//añadir una nota nueva:
+app.post("/notas", (req,res) =>{
+    if(!req.body.nota || !req.body.profesor || !req.body.trabajo_id){
+        return res.status(400).json({ error: "400, bad request"}) 
+    }
+    let nuevaNota = {
+        id: notas.length+1,
+        trabajo_id: req.body.trabajo_id,
+        nota: req.body.nota,
+        profesor: req.body.profesor,
+    }
+    notas.push(nuevaNota);
+    return res.status(201).json(nuevaNota)
+})
+
+//eliminar un registro del recurso secundario:
+app.delete("/notas/:id", (req,res) => {
+    const index = notas.findIndex(a => a.id == req.params.id)
+    const nota = notas.find(a => a.id == req.params.id);
+    if(nota){
+    notas.splice(index, 1)
+    return res.send("nota con id " + req.params.id + " eliminado")
     }
     return res.status(404).json({error: "no encontrado"})
 })
