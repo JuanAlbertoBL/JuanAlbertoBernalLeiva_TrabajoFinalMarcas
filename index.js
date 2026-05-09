@@ -23,22 +23,41 @@ let trabajos = [
 
 let notas = [
     {"id":1, "trabajo_id":1, "nota":10, "profesor":"Javi"},
-    {"id":2, "trabajo_id":2, "nota":10, "profesor":"Fran"},
-    {"id":3, "trabajo_id":3, "nota":10, "profesor":"Fran"},
+    {"id":2, "trabajo_id":2, "nota":6, "profesor":"Fran"},
+    {"id":3, "trabajo_id":3, "nota":7.8, "profesor":"Fran"},
     {"id":4, "trabajo_id":4, "nota":8.5, "profesor":"Adrián"},
     {"id":5, "trabajo_id":5, "nota":10, "profesor":"Javi"},
-    {"id":6, "trabajo_id":6, "nota":10, "profesor":"Fran"},
+    {"id":6, "trabajo_id":6, "nota":9, "profesor":"Fran"},
     {"id":7, "trabajo_id":7, "nota":10, "profesor":"Javi"},
-    {"id":8, "trabajo_id":8, "nota":10, "profesor":"Fran"},
+    {"id":8, "trabajo_id":8, "nota":5, "profesor":"Fran"},
     {"id":9, "trabajo_id":9, "nota":10, "profesor":"Javi"},
-    {"id":10, "trabajo_id":10, "nota":10, "profesor":"Javi"}
+    {"id":10, "trabajo_id":10, "nota":6.25, "profesor":"Javi"}
 ]
 
+//================================================
 //Endpoints para el recurso principal (trabajos):
+//================================================
 
-//obtener todos los trabajos
+//obtener todos los trabajos y Búsquedas y filtros:
 app.get("/trabajos", (req,res) => {
+    if (req.query.nombre){  //filtra por nombre
+        const trabajo = trabajos.filter(a => a.nombre.includes(req.query.nombre))
+        return res.json(trabajo)
+    } else if (req.query.asignatura && req.query.trimestre){    //filtra por múltiples campos: asignatura y trimestre
+        const trabajo = trabajos.filter(a => a.asignatura == req.query.asignatura && a.trimestre == req.query.trimestre)
+        return res.json(trabajo)
+    } else if(req.query.asignatura){    //orden alfabético
+        if (req.query.asignatura == "desc"){    //orden descendente
+            const trabajo = trabajos.sort((a, b) => b.asignatura.localeCompare(a.asignatura))
+            return res.json(trabajo)
+        } else if(req.query.asignatura == "asc"){   //orden ascendente
+            const trabajo = trabajos.sort((a, b) => a.asignatura.localeCompare(b.asignatura))
+            return res.json(trabajo)
+        }
+    }
+    else {
     return res.json(trabajos)
+    }
 })
 
 //Seleccionar por id con route params con menejo de error 404:
@@ -105,12 +124,28 @@ app.delete("/trabajos/:id", (req,res) => {
     }
     return res.status(404).json({error: "no encontrado"})
 })
-
+//==============================================
 //Endpoints para el recurso secundario (notas):
+//==============================================
 
-//Obtener todos los registros:
+//Obtener todos los registros y búsquedas y filtros:
 app.get("/notas", (req,res) => {
+    if(req.query.notaMin && req.query.notaMax){     //filtrar entre dos notas
+        const nota = notas.filter(a => a.nota > Number(req.query.notaMin) && a.nota < Number(req.query.notaMax))
+        return res.json(nota)
+    } else if(req.query.notaMax){   //filtrar notas menores a x
+        const nota = notas.filter(a => a.nota < Number(req.query.notaMax))
+        return res.json(nota)
+    } else if(req.query.notaMin){  //filtrar notas mayores a x
+        const nota = notas.filter(a => a.nota > Number(req.query.notaMin))
+        return res.json(nota)
+    } else if(req.query.profesor){
+        const profe = notas.filter(a => a.profesor.includes(req.query.profesor))
+        return res.json(profe)
+    }
+    else{
     return res.json(notas)
+    }
 })
 
 //obtener registros secundarios que pertenecen a un registro principal concreto (mostrar notas y profesor al seleccionar un trabajo):
@@ -123,7 +158,7 @@ app.get("/trabajos/:id/notas", (req, res) => {
 });
 
 //añadir una nota nueva:
-app.post("/notas", (req,res) =>{
+app.post("/notas", (req,res) => {
     if(!req.body.nota || !req.body.profesor || !req.body.trabajo_id){
         return res.status(400).json({ error: "400, bad request"}) 
     }
@@ -146,4 +181,46 @@ app.delete("/notas/:id", (req,res) => {
     return res.send("nota con id " + req.params.id + " eliminado")
     }
     return res.status(404).json({error: "no encontrado"})
+})
+
+//===========================
+//Endpoints de estadísticas
+//===========================
+
+//Obtener media, min y max:
+app.get("/estadisticas/notas", (req,res) => {
+    const media = (notas.reduce((suma, a) => suma + a.nota, 0) / notas.length).toFixed(2)   //media, limitado a 2 decimales
+    const max = Math.max(...notas.map(a => a.nota))     
+    const min = Math.min(...notas.map(a => a.nota))
+    return res.json({media, max, min})
+})
+
+//obtener el total de registros:
+app.get("/estadisticas/total", (req, res) => {
+    const totalTrabajos = trabajos.length
+    const totalNotas = notas.length
+    return res.json({totalTrabajos, totalNotas})
+})
+
+//obtener registros más altos:
+app.get("/estadisticas/notas/top", (req, res) => {
+    const n = Number(req.query.top) //define la cantidad de registros a mostrar
+    const top = notas.sort((a, b) => b.nota - a.nota).slice(0, n)   //ordena de mayor a menor y parte desde pos 0 hasta pos definida en el query
+    return res.json(top)
+})
+
+//obtener los registros más bajos
+app.get("/estadisticas/notas/peores", (req, res) => {
+    const n = Number(req.query.peores) //define la cantidad de registros a mostrar
+    const peores = notas.sort((a, b) => a.nota - b.nota).slice(0, n)   //ordena de menor a mayor y parte desde pos 0 hasta pos definida en el query
+    return res.json(peores)
+})
+
+//contar cuántos trabajos hay por asignatura:
+app.get("/estadisticas/trabajos-por-asignatura", (req, res) => {
+    const nTrabajos = trabajos.reduce((contador, a) => {
+        contador[a.asignatura] = (contador[a.asignatura] || 0) + 1
+        return contador
+    }, {})
+    return res.json(nTrabajos)
 })
