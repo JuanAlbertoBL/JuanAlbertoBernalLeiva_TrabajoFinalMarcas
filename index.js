@@ -8,6 +8,9 @@ app.listen(port, () => {
 console.log("Servidor abierto")
 })
 
+const cors = require("cors")
+app.use(cors())
+
 let trabajos = [
     {"id":1, "nombre":"Cafetería", "descripcion":"Crear un juego usando bucles en Java", "fecha":"9/11/2025", "curso": "Primero DAM", "trimestre": "Primer trimestre", "enlace":"https://drive.google.com/file/d/1pz2qJ_w-WAwDHC7yTsX4u-CdNG94nxIe/view?usp=sharing", "asignatura":"Programación"},
     {"id":2, "nombre":"Ejercicios de ALU", "descripcion":"Ejecicios de práctica de Unidad Aritmético Lógica", "fecha": "27/10/2025", "curso": "Primero DAM", "trimestre":"Primer trimestre", "enlace":"https://drive.google.com/file/d/1f0kraO4XTjQ6pSgUWfZ5ZsSSIVPNaxY-/view?usp=sharing", "asignatura":"Sistemas Informáticos" },
