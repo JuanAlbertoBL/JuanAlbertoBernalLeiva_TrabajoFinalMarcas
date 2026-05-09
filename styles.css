@@ -291,7 +291,7 @@ height: 280px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
-  
+  position: relative;
   /* background-color: #ffffff; */
   width: 90rem;
 }
@@ -457,4 +457,17 @@ background-attachment: relative;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-size: 2rem;
   color: #EFF8E2;
+}
+
+.btnElim{
+  border-radius: 100%;
+  background-color: #2800d8;
+  color: #EFF8E2;position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
 }

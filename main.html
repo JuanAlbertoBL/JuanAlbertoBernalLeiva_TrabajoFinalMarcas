@@ -111,10 +111,21 @@
             tarjeta.style.height = "12rem"
             tarjeta.innerHTML = `<div class="card-body">
         <h5 class="card-title">${trabajo.nombre}</h5>
+        <button class="btnElim" id="btnEliminar${trabajo.id}">x</button>
         <p class="card-text">${trabajo.descripcion}</p>
         <a href="${trabajo.enlace}" class="btn btn-primary">Saber más</a>
     </div>`
             contenedor.appendChild(tarjeta)
+            btnEliminar = document.getElementById(`btnEliminar${trabajo.id}`)
+            btnEliminar.addEventListener("click", () => {
+                fetch(`http://localhost:2077/trabajos/${trabajo.id}`, {
+                method: "DELETE"
+                })
+                .then(res => res.text())
+                .then(() => {
+                location.reload()
+            })
+        })
         });
     })
     //buscar por nombre:
