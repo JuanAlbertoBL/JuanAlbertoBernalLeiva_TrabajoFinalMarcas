@@ -1,30 +1,30 @@
 # JuanAlbertoBernalLeiva_TrabajoFinalMarcas
 ## Trabajo final de Lenguaje de Marcas  
-**Idea:**:bulb:   
+**Idea:**💡   
 Crear una página web que muestre algunos de los trabajos que he ido realizando a lo largo del curso, aprovechando que ya tengo creada la página de mi portfolio.
 Usar como recurso principal los trabajos y tareas con los campos: id, nombre, descripción, fecha, curso, trimestre, autor y asignatura.
 Como recurso secundario, id, trabajo_id, nota y profesor.   
 
-**Frontend:**:page_facing_up:  
+**Frontend:**📄  
 En mi portfolio, en el apartado Proyectos, se muestran los recursos principales (trabajos) ordenados en forma de tarjetas. Tiene nombre, descripción y enlace.  
 He añadido un buscador que filtra por el nombre (Tiene que ser exacto, respetando mayúsculas y tildes).  
 Debajo de las tarjetas se encuentra un formulario para añadir trabajos, hay que ingresar todos los campos requeridos para poder crearlo.  
 Cada tarjeta además tiene la función eliminar representada como un círculo con una 'x' en la parte superior derecha.    
 
-**How to use**:wrench:    
+**How to use**🔧    
 -Abrir index.js  
 -En index, abrir terminal y escribir 'nodemon index.js' para abrir el servidor, si da error instalar nodemon con 'npm install nodemon'  
 -Abrir main.html, click derecho y Open with Live Server  
 
-**Bruno**:dog:  
+**Bruno**🐶  
 El repositorio incluye un archivo comprimido con una colección de Bruno con todos los endpoints a vuestra disposición llamado ColeccionBrunoAmbosRecursos_trabajoFinalMarcasV2Final.zip  
 
-**Construido con:**:hammer_and_wrench:  
+**Construido con:**🛠️  
 Visual Studio Code  
 
 ---
 
-## Endpoints:pushpin:
+## Endpoints🔍
 A continuación un breve resumen de todos los endpoints implantados en la API, incluyendo título, descripción de su función y un ejemplo de uso:  
 
 ---
