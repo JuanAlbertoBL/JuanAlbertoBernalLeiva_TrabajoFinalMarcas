@@ -117,8 +117,9 @@ app.put("/trabajos/:id", (req,res) => {
     return res.status(200).json(trabajos[req.params.id-1])
 })
 
-//eliminar un registro:
+//eliminar un registro con manejo de error 500:
 app.delete("/trabajos/:id", (req,res) => {
+    try{
     const index = trabajos.findIndex(a => a.id == req.params.id)
     const trabajo = trabajos.find(a => a.id == req.params.id);
     if(trabajo){
@@ -126,7 +127,11 @@ app.delete("/trabajos/:id", (req,res) => {
     return res.send("trabajo con id " + req.params.id + " eliminado")
     }
     return res.status(404).json({error: "no encontrado"})
+    }catch{
+    res.status(500).json({error: "Error inesperado del servidor"})
+}
 })
+
 //==============================================
 //Endpoints para el recurso secundario (notas):
 //==============================================
